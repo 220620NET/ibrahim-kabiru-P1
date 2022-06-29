@@ -7,10 +7,10 @@ public class Tickets{
   private string resolver{get; set;}
   private string Description{get; set;}
   private string Status{get; set;}
-  private string Amount{get; set;}
+  private decimal Amount{get; set;}
 
 
-public Tickets(string ID, string Autor, string resolver, string Description, string status, string Amount){
+public Tickets(string ID, string Autor, string resolver, string Description, string status, decimal Amount){
     this.ID = ID;
     this.Author = Autor;
     this.resolver = resolver;
@@ -20,9 +20,7 @@ public Tickets(string ID, string Autor, string resolver, string Description, str
 }
 
 
-public void getID(){
-    Console.WriteLine("This the ID of the users" + this.Author);
-    Console.WriteLine("I wanted to know if the ID is acceptable");
+
 }
-}
+
 
