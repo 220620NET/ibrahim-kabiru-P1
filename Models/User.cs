@@ -9,7 +9,7 @@ private string Password{get; set;}
 private string role{get; set;}
 
 
-public void users(string userID, string userName, string Password, string role){
+public user(string userID, string userName, string Password, string role){
     this.userID = userID;
     this.userName = userName;
     this.Password = Password;
