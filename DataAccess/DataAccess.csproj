@@ -1,21 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
-<<<<<<< HEAD
   <PropertyGroup>
-=======
-
-  <ItemGroup>
-    <ProjectReference Include="..\mainproject\mainproject.csproj" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
->>>>>>> c83facf40b34246f307575cc7c059b108cc3c431
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-<<<<<<< HEAD
 
   <ItemGroup>
     <ProjectReference Include="..\Models\Models.csproj" />
@@ -25,6 +14,4 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
   </ItemGroup>
-=======
->>>>>>> c83facf40b34246f307575cc7c059b108cc3c431
 </Project>

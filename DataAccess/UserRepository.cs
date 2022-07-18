@@ -39,73 +39,81 @@ public class UserRepository
 
  }
 
- /*public User GetUser(string name)
+ public User GetUserbyUserName(string username)
   {
       User foundUser;
       SqlConnection conn = _connectionFactory.GetConnection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("Select * From project.users Where username = @name", conn);
+      SqlCommand command = new SqlCommand ("Select * From project.users where username = @username", conn);
+      //("insert into project.users (username, password, user_role) values (@username, @password, @user_role)",  _connectionFactory.GetConnection());
 
-      cmd.Parameters.AddWithValue("@name", name);
-      SqlDataReader reader = cmd.ExecuteReader();
+      command.Parameters.AddWithValue("@username", username);
+
+      SqlDataReader reader = command.ExecuteReader();
 
        while(reader.Read())
         {
          return new User
          {
-         Id = (int)reader["trainer_id"],
-             Name = (string)reader["trainer_name"],
-             password = (string)reader["trainer_password"],
-             role = (string)reader["trainer_role"],
-
+           userID = (int)reader["userID"],
+           userName = (string)reader["userName"],
+           Password = (string)reader["password"],
+           role = (string)reader["role"],
+        
          };
 
-          }
-           
-           
-     throw new ResourceNotFoundException("Could not find the user  with such name");
+        }
+
+     throw new ResourceNotFoundException("Could not find the user with such name");
     
     }
 
 public User GetUser(int id)
  {
- throw new NotImplementedException();
+throw new NotImplementedException();
  } 
-
  public User AddUser(User newUserToRegister)
     {
-        DataSet UserSet = new DataSet();
-
-        SqlDataAdapter userAdapter = new SqlDataAdapter("Select * project.users",  _connectionFactory.GetConnection());
-
-        userAdapter.Fill(UserSet, "UserTable");
-
-
-        DataTable? UserTable = UserSet.Tables["UserTable"];
-
-        if(UserTable != null)
-        {
-            DataRow newUser = UserTable.NewRow();
-            newUser["user_name"] = newUserToRegister.Name;
-            newUser["user_password"] = newUserToRegister.Password;
-            newUser["use_role"] = newUserToRegister.Role;
-            newUser["User_id"] = newUserToRegister.Id;
-
-            UserTable.Rows.Add(newUser);
-
-            SqlCommandBuilder cmdbuilder = new SqlCommandBuilder(userAdapter);
-            SqlCommand insertCommand = cmdbuilder.GetInsertCommand();
-
+       User UserSet = new User();  
         
-            userAdapter.InsertCommand = insertCommand;
-
-          
-            userAdapter.Update(UserTable);
-        }
-        return newTUserToRegister;
-    }*/
+        SqlConnection conn = _connectionFactory.GetConnection();
+        SqlCommand command = new SqlCommand("insert into project.users (username, password, user_role) values (@username, @password, @user_role)",  _connectionFactory.GetConnection());
+        command.Parameters.AddWithValue("@username", newUserToRegister.userName); 
+        command.Parameters.AddWithValue("@password", newUserToRegister.Password); 
+        command.Parameters.AddWithValue("@user_role", newUserToRegister.role);
+        try
+             {
+                conn.Open();
+                int sat = command.ExecuteNonQuery();
+                conn.Close();
+            
+                if (sat != 0)
+                {
+                    if (newUserToRegister.userName != null)
+                    {
+                        return newUserToRegister;
+                    }
+                    else
+                    {
+                      throw new UserNameNotAvailableException();
+                    }
+                }
+                else
+                {
+                    throw new UserNameNotAvailableException();
+                }
+             }
+            catch (UserNameNotAvailableException)
+            {
+                throw new UserNameNotAvailableException();
+            } 
+           
+    }
+    
 }
+
+
 
     
     

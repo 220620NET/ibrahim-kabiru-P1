@@ -1,4 +1,4 @@
-/*using Models;
+using Models;
 using CustomException;
 using Microsoft.Data.SqlClient;
 
@@ -9,9 +9,10 @@ namespace DataAccess;
 public class TicketRepository 
 {
     private readonly ConnectionFactory _connectionFactory;
-    public TicketRepository(ConnectionFactory factory)
+
+    public TicketRepository()
     {
-        _connectionFactory = factory;
+        _connectionFactory = ConnectionFactory.GetInstance();
     }
 
 
@@ -22,100 +23,129 @@ public class TicketRepository
 
       conn.Open();
 
-       SqlCommand cmd = new SqlCommand("Select * From Ticket", conn);
+       SqlCommand cmd = new SqlCommand("Select * From project.tickets", conn);
        SqlDataReader reader = cmd.ExecuteReader();
 
         while(reader.Read())
         {
-            ticket.Add(new Tickets
-            {
-                Id = (int)reader["ticket_id"],
-                Author = (int)reader["ticket_author"],
-                resolver = (int)reader["ticket_resolver"],
-                Description = (string)reader["ticket_description"],
-                Status = (string)reader["ticket_status"],
-                Money = Convert.ToDecimal((double)reader["ticket_money"]),
-                
-            });
+            ticket.Add(new Tickets((int)reader[0],(string)reader[1],(string)reader[2],(string)reader[3],(string)reader[4],(decimal)reader[5]));
+           
         }
             reader.Close();
             conn.Close();
 
-           return tickets;
+           return ticket;
 
    }
    
-    public Tickets GetTicket(string name)
+    public Tickets GetTicketsbyAuthor(string author)
     {
-      PokeTrainer foundTrainer;
+      Tickets foundTickets;
       SqlConnection conn = _connectionFactory.GetConnection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("Select * From Ticket Where ticket_name = @name", conn);
-      
-      cmd.Parameters.AddWithValue("@name", name);
-      SqlDataReader reader = cmd.ExecuteReader();
+     SqlCommand command = new SqlCommand("insert into project.tickets (author, resolver, description, status, amount) values (@author, @resolver, @description, @status, @amount)",  _connectionFactory.GetConnection());
+      command.Parameters.AddWithValue("@author", author);
+      SqlDataReader reader = command.ExecuteReader();
 
       while(reader.Read())
         {
-            return new Ticket
+            return new Tickets
             {
-                Id = (int)reader["id"],
-                Author = (int)reader["author_fk"],
-                Resolver = (int)reader["resolver+fk"],
-                Description = (string)reader["description"],
-                Status = (string)reader["status"],
-                Amount = Convert.ToDecimal((double)reader["amount"]),
+             ID = (int)reader["ID"],
+             Author = (string)reader["Author"],
+             resolver = (string)reader["resolver"],
+             Description = (string)reader["Description"],
+             Status = (string)reader["Status"],
+             Amount = Convert.ToDecimal((double)reader["Amount"]),
             };
         }
-           throw new RecordNotFoundException("Could not find the ticket with such name");
+           throw new ResourceNotFoundException("Could not find the ticket with such name");
     }
       
-        public Tickets GetTicket(int id)
+        public Tickets GetTickets(int id)
      {
          throw new NotImplementedException();
      }
-  
-    
-     public Tickets AddTicket(Tickets newTicketToRegister)
-     {
-        DataSet TicketSet = new DataSet();
-        SqlDataAdapter ticketAdapter = new SqlDataAdapter("Select * From Ticket",  _connectionFactory.GetConnection());
-        
-        ticketAdapter.Fill(TicketSet, "ticketTable");
+      public Tickets GetTicketsbyStatus(string status)
+    {
+      Tickets foundTickets;
+      SqlConnection conn = _connectionFactory.GetConnection();
+      conn.Open();
 
-        DataTable? ticketTable = TicketSet.Tables["ticketTable"];
+     SqlCommand command = new SqlCommand("Select * From project.tickets where status = @status", conn);
+     //("insert into project.tickets (author, resolver, description, status, amount) values (@author, @resolver, @description, @status, @amount)",  _connectionFactory.GetConnection());
+      command.Parameters.AddWithValue("@status", status);
+      SqlDataReader reader = command.ExecuteReader();
 
-        if(ticketTable != null)
+      while(reader.Read())
         {
-            DataRow newTickets = ticketTable.NewRow();
-            newTickets["ticket_id"] = newTicketToRegister.ID;
-            newTickets["ticket_author"] = newTicketToRegister.Author;
-            newTickets["ticket_resolver"] = newTicketToRegister.Resolver;
-            newTicketss["ticket_description"] = newTicketToRegister.Description;
-            newTickets["ticket_status"] = newTicketToRegister.Status;
-            newTrainers["ticket_money"] = newTicketToRegister.Money;
-
-             ticketTable.Rows.Add(newTicket);
-        
-            SqlCommandBuilder cmdbuilder = new SqlCommandBuilder(ticketAdapter);
-            SqlCommand insertCommand = cmdbuilder.GetInsertCommand();
-
-            ticketAdapter.InsertCommand = insertCommand;
-        
-             ticketAdapter.Update(ticketTable);
+            return new Tickets
+            {
+             ID = (int)reader["ID"],
+             Author = (string)reader["Author"],
+             resolver = (string)reader["resolver"],
+             Description = (string)reader["Description"],
+             Status = (string)reader["Status"],
+             Amount = Convert.ToDecimal((double)reader["Amount"]),
+            };
         }
-             return newTicketToRegister;
+           throw new ResourceNotFoundException("Could not find the ticket with such name");
+    }
+    
+     public Tickets AddTickets(Tickets newTicketsToRegister)
+     {
+        Tickets TicketsSet = new Tickets();
+        SqlConnection conn = _connectionFactory.GetConnection();
+        
+         // SqlDataAdapter ticketAdapter = new SqlDataAdapter("Select * From project.tickets",  _connectionFactory.GetConnection());
+        SqlCommand command = new SqlCommand("insert into project.tickets (tickets_id, author, resolver, description,status, amount) values (@tickets_id, @author, @resolver,@description, @status, @amount)",  _connectionFactory.GetConnection());
+        command.Parameters.AddWithValue("@tickets_id", newTicketsToRegister.ID); 
+        command.Parameters.AddWithValue("@Author", newTicketsToRegister.Author);
+        command.Parameters.AddWithValue("@resolver", newTicketsToRegister.resolver); 
+        command.Parameters.AddWithValue("@description", newTicketsToRegister.Description); 
+        command.Parameters.AddWithValue("@status", newTicketsToRegister.Status); 
+        command.Parameters.AddWithValue("@amount", newTicketsToRegister.Amount);
+      
+        try
+        {
+             conn.Open();
+             int tax = command.ExecuteNonQuery();
+             conn.Close();
+             //----
+             if (tax != 0)
+             {
+                if (newTicketsToRegister.Author != null)
+                {
+                    return AddTickets(newTicketsToRegister);
+                }
+                else
+                {
+                    throw new UserNameNotAvailableException();
+                }
+            }
+            else
+            {
+                throw new UserNameNotAvailableException();
+            }
+            //----
+        }
+        catch (UserNameNotAvailableException)
+        {
+            throw new UserNameNotAvailableException();
+        } 
+        
 
      }
-     public Tickets UpdateReimbursmentAmount(decimal amount)
-  {
+         
+    public Tickets UpdateReimbursmentAmount(decimal amount)
+   {
     Tickets foundticket;
     SqlConnection conn = _connectionFactory.GetConnection();
 
     conn.Open();
 
-    SqlCommand cmd = new SqlCommand("Update project1.ticket set amount = @fk ", conn);
+    SqlCommand cmd = new SqlCommand("Update project.tickets set amount = @fk ", conn);
 
     cmd.Parameters.AddWithValue("@fk", amount);
 
@@ -123,11 +153,11 @@ public class TicketRepository
 
     while(reader.Read())
     {
-        return new Ticket
+        return new Tickets
         {
             ID = (int)reader["id"],
             Author = (string)reader["author_fk"],
-            Resolver = (string)reader["resolver_fk"],
+            resolver = (string)reader["resolver_fk"],
             Description = (string)reader["description"],
             Status = (string)reader["status"],
             Amount = (decimal)reader["amount"]
@@ -142,7 +172,7 @@ public class TicketRepository
     }
    
  
-}*/
+}
 
 
 

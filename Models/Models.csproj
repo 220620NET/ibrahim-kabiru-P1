@@ -1,18 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-<<<<<<< HEAD
-<<<<<<<< HEAD:Models/Models.csproj
-========
 
-  <ItemGroup>
-    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
-  </ItemGroup>
-
->>>>>>>> c83facf40b34246f307575cc7c059b108cc3c431:mainproject/mainproject.csproj
-=======
-  <ItemGroup>
-   <ProjectRefrence Include = "..\mainproject\mainproject.csproj">
-  </ItemGroup>
->>>>>>> c83facf40b34246f307575cc7c059b108cc3c431
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
