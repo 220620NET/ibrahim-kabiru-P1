@@ -1,18 +1,50 @@
 using Models;
+using CustomException;
 using DataAccess;
 
 namespace Services;
 
 public class UserService
 {
-   private readonly UserRepository _repo;
+   private readonly IUserRepository _repo;
 
-   public UserService(UserRepository repo)
+   public UserService(UserRepository repository)
    {
-     _repo = repo;
+     _repo = repository;
    }
- public List<User> GetAllUser()
+ public User GetUserbyUserName(string username)
  {
-   return _repo.GetAllUser();
+  try
+  {
+    return _repo.GetUserbyUserName(username);
+  }
+   catch(UserNameNotAvailableException)
+   {
+    throw new UserNameNotAvailableException();
+   }
  }
-} 
+  public User GetUser(int id)
+  {
+    try
+    {
+      return _repo.GetUser(id);
+    }
+     catch (ResourceNotFoundException)
+    {
+      throw new ResourceNotFoundException();
+    
+    }
+  }
+    public List<User> GetAllUser()
+    {
+      try
+      {
+        return _repo.GetAllUser();
+      }
+      catch(UserNameNotAvailableException)
+      {
+        throw new UserNameNotAvailableException();
+      }
+    }
+  }
+ 

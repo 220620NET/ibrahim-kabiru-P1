@@ -1,6 +1,6 @@
 using Models;
 using DataAccess; 
-using CustomExceptions;
+using CustomException;
 
 namespace Services;
 public class AuthService
@@ -17,31 +17,31 @@ public class AuthService
       User foundUser;
       try
       {
-         sat =_repo.GetUserbyUserName(username);
+        User sat =_repo.GetUserbyUserName(username);
         if (sat.userName == "")
             {
                throw new ResourceNotFoundException();
             }    
-          else if(sat.password == password)
+          else if(sat.Password == password)
              {
                   return sat;
              }
              else
              {
-               invalidCredentialsException();
+                throw new InvalidCredentialsException();
              }
       }
             catch (ResourceNotFoundException)
             {
-              throw new ResourceFoundException();
+              throw new ResourceNotFoundException();
             } 
-            catch (invalidCredentialsException)
+            catch (InvalidCredentialsException)
             {
-              throw new invalidCredentialsException();
+              throw new InvalidCredentialsException();
             }
 
       }
-   }
+   
    /*
    * Register:
    * 1. collect user information
@@ -56,33 +56,36 @@ public class AuthService
    {
       try
       {
-         User check =_repo.GetUserbyUserName(username);
-         if (check.username == username)
+         User check =_repo.GetUserbyUserName(newUser.userName);
+         if (check.userName == newUser.userName)
          {
-         throw new UsernameNotAvailableException();
+         throw new UserNameNotAvailableException();
          }
          else
          {
-           User user = _repo.createUser(newUser);
+           User user = _repo.AddUser(newUser);
+           return user;
          }
-         if (User.id > 0)
+        /* if (User.id > 0)
          {  
             return User;
          }
          else 
          {
             throw new InvalidCredentialsException();
-         }
+         }*/
         }
         catch(UserNameNotAvailableException)
         {
-            throw new InvalidCredentialsException();
+            throw new UserNameNotAvailableException();
         }
-        catch(InvalidCredentialsException)
+       /* catch(InvalidCredentialsException)
         {
           throw new InvalidCredentialsException();
-        }
+        }*/
       
+   }
+   
    }
 
    /*

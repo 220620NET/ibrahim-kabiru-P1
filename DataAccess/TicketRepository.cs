@@ -6,7 +6,7 @@ using Microsoft.Data.SqlClient;
 namespace DataAccess;
 
 
-public class TicketRepository 
+public class TicketRepository: ITicketRepository
 {
     private readonly ConnectionFactory _connectionFactory;
 
@@ -38,19 +38,21 @@ public class TicketRepository
 
    }
    
-    public Tickets GetTicketsbyAuthor(string author)
+    public List<Tickets> GetReimbursmentByAuthor(string author)
     {
+      
       Tickets foundTickets;
       SqlConnection conn = _connectionFactory.GetConnection();
       conn.Open();
 
-     SqlCommand command = new SqlCommand("insert into project.tickets (author, resolver, description, status, amount) values (@author, @resolver, @description, @status, @amount)",  _connectionFactory.GetConnection());
+      //SqlCommand command = new SqlCommand("insert into project.tickets (author, resolver, description, status, amount) values (@author, @resolver, @description, @status, @amount)",  _connectionFactory.GetConnection());
+      SqlCommand command = new SqlCommand ("Select * From project.tickets where author = @author", conn);
       command.Parameters.AddWithValue("@author", author);
       SqlDataReader reader = command.ExecuteReader();
-
+      List<Tickets> tickets = new List<Tickets>();
       while(reader.Read())
         {
-            return new Tickets
+            tickets.Add (new Tickets   //return new Tickets
             {
              ID = (int)reader["ID"],
              Author = (string)reader["Author"],
@@ -58,16 +60,16 @@ public class TicketRepository
              Description = (string)reader["Description"],
              Status = (string)reader["Status"],
              Amount = Convert.ToDecimal((double)reader["Amount"]),
-            };
+            });
         }
            throw new ResourceNotFoundException("Could not find the ticket with such name");
     }
       
-        public Tickets GetTickets(int id)
+        public Tickets GetReimbursmentById(int id)
      {
-         throw new NotImplementedException();
+         throw new ResourceNotFoundException();
      }
-      public Tickets GetTicketsbyStatus(string status)
+      public List<Tickets>  GetReimbursmentByStatus(string status)
     {
       Tickets foundTickets;
       SqlConnection conn = _connectionFactory.GetConnection();
@@ -77,10 +79,10 @@ public class TicketRepository
      //("insert into project.tickets (author, resolver, description, status, amount) values (@author, @resolver, @description, @status, @amount)",  _connectionFactory.GetConnection());
       command.Parameters.AddWithValue("@status", status);
       SqlDataReader reader = command.ExecuteReader();
-
+      List<Tickets> tickets = new();
       while(reader.Read())
         {
-            return new Tickets
+             tickets.Add (new Tickets   //return new Tickets
             {
              ID = (int)reader["ID"],
              Author = (string)reader["Author"],
@@ -88,12 +90,13 @@ public class TicketRepository
              Description = (string)reader["Description"],
              Status = (string)reader["Status"],
              Amount = Convert.ToDecimal((double)reader["Amount"]),
-            };
+            }  
+            );
         }
            throw new ResourceNotFoundException("Could not find the ticket with such name");
     }
     
-     public Tickets AddTickets(Tickets newTicketsToRegister)
+     public Tickets CreateReimbursment(Tickets newTicketsToRegister)
      {
         Tickets TicketsSet = new Tickets();
         SqlConnection conn = _connectionFactory.GetConnection();
@@ -117,7 +120,7 @@ public class TicketRepository
              {
                 if (newTicketsToRegister.Author != null)
                 {
-                    return AddTickets(newTicketsToRegister);
+                    return CreateReimbursment(newTicketsToRegister);
                 }
                 else
                 {
@@ -138,7 +141,7 @@ public class TicketRepository
 
      }
          
-    public Tickets UpdateReimbursmentAmount(decimal amount)
+    public Tickets UpdateReimbursmentAmount(decimal amount, int id)
    {
     Tickets foundticket;
     SqlConnection conn = _connectionFactory.GetConnection();

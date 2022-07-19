@@ -6,6 +6,6 @@ public interface IUserRepository
 {
   List<User> GetAllUser();
   User GetUser(int id);
-  User GetUserByUserName(string username);
+  User GetUserbyUserName(string username);
   User AddUser(User newUserToRegister);
 }

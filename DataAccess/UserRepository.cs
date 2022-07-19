@@ -6,7 +6,7 @@ using Microsoft.Data.SqlClient;
 namespace DataAccess;
 
 
-public class UserRepository 
+public class UserRepository: IUserRepository 
 {
 
   private readonly ConnectionFactory _connectionFactory;
