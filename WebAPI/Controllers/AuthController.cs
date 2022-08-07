@@ -18,10 +18,10 @@ namespace WebAPI.Controllers;
         {
             try
             {
-                user.userName = user.userName != null ? user.userName : "";
-                _authService.Register(user);
-                user =_userService.GetUserbyUserName(user.userName);
-                return Results.Created("/register", user);
+               // user.userName = user.userName != null ? user.userName : "";
+              User test = _authService.Register(user);
+                //user =_userService.GetUserbyUserName(user.userName);
+                return Results.Created("/register", test);  //user
             }
             catch (UserNameNotAvailableException)
             {
@@ -29,14 +29,14 @@ namespace WebAPI.Controllers;
             }
         }
        
-        public IResult logindetails(User user)
+        public IResult logindetails(string username, string password)
         {
             try
             {
-                user.userName = user.userName != null ? user.userName : "";
-                user.Password = user.Password != null ? user.Password : "";
-                user = _authService.logindetails(user.userName, user.Password);
-                return Results.Ok(user);
+               //user.userName = user.userName != null ? user.userName : "";
+              // user.Password = user.Password != null ? user.Password : "";
+               User user = _authService.logindetails(username, password);
+               return Results.Ok(user);
             }
             catch (InvalidCredentialsException)
             {

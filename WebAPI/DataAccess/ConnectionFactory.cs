@@ -3,9 +3,10 @@ using Microsoft.Data.SqlClient;
 public class ConnectionFactory
 {
    private static ConnectionFactory? _instance;
-    private static string _connectionString = File.ReadAllText("../DataAccess/connectionString.txt"); //readonly
+    //private static string _connectionString = File.ReadAllText("../DataAccess/connectionString.txt"); //readonly
 
-    private ConnectionFactory() {}
+    //private ConnectionFactory() {}
+    private readonly string _connectionString;
    private ConnectionFactory(string connectionString)  //
         {                                               //
             _connectionString = connectionString;      //
@@ -17,7 +18,7 @@ public class ConnectionFactory
     {
         if(_instance == null)
         {
-            _instance = new ConnectionFactory();
+           // _instance = new ConnectionFactory();
             _instance = new ConnectionFactory(connectionString); //
         }
         return _instance;

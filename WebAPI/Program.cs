@@ -35,7 +35,7 @@ app.UseSwaggerUI();
 
 
 app.MapGet("/", () => "Hi Sam!");
-/* The curl braces are the route parameter
+ //The curl braces are the route parameter
 app.MapGet("/greet/{name}", (string name) => {
    return $"Hi {name}!"; });
 // Querry parameter these are key value pairs you pass in with your url after the question mark(:)
@@ -45,7 +45,7 @@ app.MapGet("/greet", (string name) => {
  app.MapGet("/users", (UserService service) => 
  {
     return service.GetAllUser();
-});*/
+});
 
 /*  Authorization Endpoints
  *  
@@ -55,9 +55,9 @@ app.MapGet("/greet", (string name) => {
 
 
 app.MapPost("/register", (User user, AuthController controller) =>controller.Register(user));
-app.MapPost("/login", (User user, AuthController controller) => controller.logindetails(user));
+app.MapPost("/login", (string username, string password, AuthController controller) => controller.logindetails(username, password));
 
-//app.MapPut("/reset", (Users user, AuthController controller) => controller.Reset(user));
+//app.MapPut("/reset", (User user, AuthController controller) => controller.Reset(user));
 //app.MapPut("/payroll", (Users user, AuthController controller) => controller.PayRollChange(user));
 
  //User Endpoints
@@ -95,6 +95,23 @@ some of methods of http are : get use to get resorces over the web, post uses to
 is to delete over the web.
  What is a database?
 A database is an organized collection of structured information.
+
+
+Hello everybody, my name is .... today i will be presenting my foundational project cooking search application API is a restful 
+API so this does not have necessarily a nice user interface to use for the users, but this is ready for any develpoers who want to 
+implement the user interface to provide the pokemon storage related functionality, such as user management or the positive withdrawing 
+in viewing they're currently deposited, so this would be highly useful for anybody who has too many documents and they are running out of
+ storage and they would be to offload some of ypur extra documents summer. On this API is built using C sharp so for language Asp. 
+ Net Core as a web framework and sequel server as th database of choice, both the database and API is deploy on as her using other Apps 
+ services and as your sequel server. So let's take a look in the API, so there are few methods that here that enables those 
+ functionalities so here is the user management functionality getting all pokemeon trainer and logging in and registering, and then here 
+ is cooking related endpoints such as getting off of the posting a pokemon game by a specific documnets ID and then then we're dtawing 
+ the documents on those use post and delete colums respectively. So let's say i have a pokemon trainer named aren't a cat. She is she's 
+ been going around and catching many broken ones, and it has come to a point where she ran out of the story she's got just caught her sick,
+  there's no more room in the belt, she would like to deposit is somewhere so she can continue catching documents, and that requires 
+  catching a lot of books. So because she hasn't used this system before the first thing that you will have to do is register as a new 
+  booking trainning, so in order to register as a new pokemon trainer we have to send an http post request to this slash slash register
+   and point with a required.
 
 */
 

@@ -27,5 +27,5 @@ select * from project.users;
 
 insert into project.users(username, password, user_role) values ('shile', 'perg2345', 'employee');
 
-insert into project.users(username, password, user_role) values ('chile', 'greg4325', 'manager');
+insert into project.users(username, password, user_role) values ('sammy', 'greg4325', 'manager');
 

@@ -14,9 +14,9 @@ public class AuthService
    }
    public User logindetails(string username, string password)
    {  
-      User foundUser;
+     // User foundUser;
       try
-      {
+      {  
         User sat =_repo.GetUserbyUserName(username);
         if (sat.userName == "")
             {
@@ -24,7 +24,7 @@ public class AuthService
             }    
           else if(sat.Password == password)
              {
-                  return sat;
+                  return sat;  
              }
              else
              {
@@ -55,24 +55,23 @@ public class AuthService
    public User Register(User newUser)
    {
       try
-      {
+     /* {
          User check =_repo.GetUserbyUserName(newUser.userName);
          if (check.userName == newUser.userName)
          {
          throw new UserNameNotAvailableException();
          }
-         else
+         else*/
          {
            User user = _repo.AddUser(newUser);
            return user;
          }
        
-        }
+      //  }
         catch(UserNameNotAvailableException)
         {
             throw new UserNameNotAvailableException();
-        }
-       
+        }                                                            
       
    }
    

@@ -10,14 +10,14 @@ public class TicketRepository: ITicketRepository
 {
     private readonly ConnectionFactory _connectionFactory;
 
-    public TicketRepository()
-    {
-       _connectionFactory = ConnectionFactory.GetInstance(File.ReadAllText("../DataAccess/connectionString.txt")); 
-    }
-   /* public TicketRepository(ConnectionFactory factory)
-        {
-            _connectionFactory = factory;
-        }*/
+    //public TicketRepository()
+    //{
+      // _connectionFactory = ConnectionFactory.GetInstance(File.ReadAllText("../DataAccess/connectionString.txt")); 
+   // }
+    public TicketRepository(ConnectionFactory factory) //
+        {                                       //
+            _connectionFactory = factory; //
+        }                                   //
 
 
    public List<Tickets> GetAllTicket()
@@ -113,12 +113,12 @@ public class TicketRepository: ITicketRepository
         command.Parameters.AddWithValue("@description", newTicketsToRegister.Description); 
         command.Parameters.AddWithValue("@status", newTicketsToRegister.Status); 
         command.Parameters.AddWithValue("@amount", newTicketsToRegister.Amount);
-      
+        conn.Open();  //
         try
         {
-             conn.Open();
+             //conn.Open();
              int tax = command.ExecuteNonQuery();
-             conn.Close();
+             //conn.Close();
              //----
              if (tax != 0)
              {
