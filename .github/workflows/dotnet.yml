@@ -2,9 +2,11 @@ name: continuos integration
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "staging" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", staging" ]
+
+ #workflow_dispatch:
 
 jobs:
   build:
